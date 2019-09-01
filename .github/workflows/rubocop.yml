@@ -1,0 +1,11 @@
+name: Rubocop checks
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - uses: gimenete/rubocop-action@1.0

@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+if ARGV[0].nil?
+  puts 'File path not found. Usage: bin/load <path/to/file.txt>'
+  exit
+end
+
+unless File.exist?(ARGV[0])
+  puts "#{ARGV[0]} doesn't exist."
+  exit
+end
+
+require 'zeitwerk'
+
+loader = Zeitwerk::Loader.new
+loader.push_dir('lib')
+loader.setup
+
+loader = FileLoader.new(ARGV[0])
+loader.load!
+rovers = loader.rovers
+
+begin
+  rovers.map(&:start!)
+  puts rovers.map(&:to_s)
+rescue InvalidMovementError, InvalidCommandError, InvalidPositionError => e
+  puts e.message
+end
